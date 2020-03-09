@@ -19,12 +19,56 @@ from email_preprocess import preprocess
 ### labels_train and labels_test are the corresponding item labels
 features_train, features_test, labels_train, labels_test = preprocess()
 
-
+print "number of features:"
+print len(features_train[0])
 
 
 #########################################################
-### your code goes here ###
 
+#EG: just to calc the entropy of the example
+import math
+#Calc the entropy SUM OF(-Pi log2(Pi) + -Pi log2(Pi) ...):
+#result = -0.5*math.log(0.5, 2) + -0.5*math.log(0.5, 2)
+#result = -0.67*math.log(0.67, 2) + -0.34*math.log(0.34, 2)
+#print result
+
+##################
+
+
+### your code goes here ###
+from sklearn import tree
+from sklearn.metrics import accuracy_score
+clf = tree.DecisionTreeClassifier(min_samples_split=2)
+clf = clf.fit(features_train, labels_train)
+
+pred = clf.predict(features_test)
+accuracy = accuracy_score(labels_test, pred)
+print "accuracy is:"
+print(accuracy)
+
+clf = tree.DecisionTreeClassifier(min_samples_split=40)
+clf = clf.fit(features_train, labels_train)
+
+pred = clf.predict(features_test)
+accuracy = accuracy_score(labels_test, pred)
+print "accuracy is:"
+print(accuracy)
+
+clf = tree.DecisionTreeClassifier(min_samples_split=50)
+clf = clf.fit(features_train, labels_train)
+
+pred = clf.predict(features_test)
+accuracy = accuracy_score(labels_test, pred)
+print "accuracy is:"
+print(accuracy)
+
+clf = tree.DecisionTreeClassifier(min_samples_split=50, min_samples_leaf=5)
+clf = clf.fit(features_train, labels_train)
+
+pred = clf.predict(features_test)
+accuracy = accuracy_score(labels_test, pred)
+print "accuracy is:"
+print(accuracy)
 
 #########################################################
 

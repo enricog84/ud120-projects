@@ -20,15 +20,24 @@ print __doc__
 
 from time import time
 import logging
+#EG: Choose somehting that does NOT require a display: https://stackoverflow.com/questions/37604289/tkinter-tclerror-no-display-name-and-no-display-environment-variable
+import matplotlib
+matplotlib.use('Agg')
 import pylab as pl
 import numpy as np
 
-from sklearn.cross_validation import train_test_split
+#Adapted, see https://github.com/udacity/ud120-projects/issues/233
+#from sklearn.cross_validation import train_test_split
+from sklearn.model_selection import train_test_split
 from sklearn.datasets import fetch_lfw_people
-from sklearn.grid_search import GridSearchCV
+#EG: Adapted, see: https://github.com/cmusatyalab/openface/issues/388
+#from sklearn.grid_search import GridSearchCV
+from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
-from sklearn.decomposition import RandomizedPCA
+#EG: Adapted, see: https://stackoverflow.com/questions/54494785/sklearn-0-20-2-import-error-with-randomizedpca
+#from sklearn.decomposition import RandomizedPCA
+from sklearn.decomposition import PCA as RandomizedPCA
 from sklearn.svm import SVC
 
 # Display progress logs on stdout
@@ -80,6 +89,9 @@ t0 = time()
 X_train_pca = pca.transform(X_train)
 X_test_pca = pca.transform(X_test)
 print "done in %0.3fs" % (time() - t0)
+
+print "Explained variance ration"
+print pca.explained_variance_ratio_
 
 
 ###############################################################################
@@ -143,4 +155,6 @@ plot_gallery(X_test, prediction_titles, h, w)
 eigenface_titles = ["eigenface %d" % i for i in range(eigenfaces.shape[0])]
 plot_gallery(eigenfaces, eigenface_titles, h, w)
 
-pl.show()
+#pl.show()
+#EG: Save to file instead of displaying it.
+matplotlib.pyplot.savefig('./theFile1.png')

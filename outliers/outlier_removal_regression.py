@@ -2,6 +2,9 @@
 
 import random
 import numpy
+#EG: Choose somehting that does NOT require a display: https://stackoverflow.com/questions/37604289/tkinter-tclerror-no-display-name-and-no-display-environment-variable
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import pickle
 
@@ -20,15 +23,25 @@ net_worths = pickle.load( open("practice_outliers_net_worths.pkl", "r") )
 ### and n_columns is the number of features
 ages       = numpy.reshape( numpy.array(ages), (len(ages), 1))
 net_worths = numpy.reshape( numpy.array(net_worths), (len(net_worths), 1))
-from sklearn.cross_validation import train_test_split
+#EG: Has been deprecated, see https://stackoverflow.com/questions/46572475/module-sklearn-has-no-attribute-cross-validation#46572558
+#from sklearn.cross_validation import train_test_split
+from sklearn.model_selection import train_test_split
 ages_train, ages_test, net_worths_train, net_worths_test = train_test_split(ages, net_worths, test_size=0.1, random_state=42)
 
 ### fill in a regression here!  Name the regression object reg so that
 ### the plotting code below works, and you can see what your regression looks like
+from sklearn import linear_model
+reg = linear_model.LinearRegression()
+reg.fit(ages_train, net_worths_train)
 
+print "predict:", reg.predict(ages_test)
+print "slope:", reg.coef_
+print "intercept:", reg.intercept_
 
-
-
+print "############ stats on test dataset ###########"
+print "r-squared score:", reg.score(ages_test, net_worths_test)
+print "############ stats on training dataset ###########"
+print "r-squared score:", reg.score(ages_train, net_worths_train)
 
 
 
@@ -41,7 +54,9 @@ try:
 except NameError:
     pass
 plt.scatter(ages, net_worths)
-plt.show()
+#plt.show()
+#EG: Save to file instead of displaying it.
+plt.savefig('./theFile1.png')
 
 
 ### identify and remove the most outlier-y points
@@ -68,6 +83,14 @@ if len(cleaned_data) > 0:
     ### refit your cleaned data!
     try:
         reg.fit(ages, net_worths)
+        #EG Stuff:
+        print "cleaned predict:", reg.predict(ages_test)
+        print "cleaned slope:", reg.coef_
+        print "cleaned intercept:", reg.intercept_
+        print "############cleaned stats on test dataset ###########"
+        print "cleaned r-squared score:", reg.score(ages_test, net_worths_test)
+        print "############cleaned stats on training dataset ###########"
+        print "cleaned r-squared score:", reg.score(ages_train, net_worths_train)
         plt.plot(ages, reg.predict(ages), color="blue")
     except NameError:
         print "you don't seem to have regression imported/created,"
@@ -76,7 +99,9 @@ if len(cleaned_data) > 0:
     plt.scatter(ages, net_worths)
     plt.xlabel("ages")
     plt.ylabel("net worths")
-    plt.show()
+    #plt.show()
+    #EG: Save to file instead of displaying it.
+    plt.savefig('./theFile2.png')
 
 
 else:
